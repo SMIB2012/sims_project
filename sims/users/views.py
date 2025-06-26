@@ -11,8 +11,8 @@ from django.views.generic import ListView, DetailView, UpdateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
-from .models import User
-from .forms import UserProfileForm, PGSearchForm, SupervisorAssignmentForm
+from .models import User, USER_ROLES, SPECIALTY_CHOICES, YEAR_CHOICES
+from .forms import UserProfileForm, PGSearchForm, SupervisorAssignmentForm, UserCreateForm
 from .decorators import (
     admin_required, supervisor_required, pg_required,
     AdminRequiredMixin, SupervisorRequiredMixin, PGRequiredMixin,
@@ -274,108 +274,62 @@ class UserListView(AdminRequiredMixin, ListView):
 
 
 class UserCreateView(AdminRequiredMixin, View):
-    """Create new user (admin only)"""
+    """Enhanced user creation view with comprehensive validation using Django forms"""
     
     def get(self, request):
-        return render(request, 'users/user_create.html')
+        # Check if request is coming from admin interface
+        from_admin = request.GET.get('next', '').startswith('/admin/') or 'admin' in request.path
+        template_name = 'users/user_create_admin.html' if from_admin else 'users/user_create.html'
+        
+        form = UserCreateForm()
+        
+        context = {
+            'form': form,
+            'page_title': 'Create New User',
+            'user_roles': USER_ROLES,
+            'specialty_choices': SPECIALTY_CHOICES,
+            'year_choices': YEAR_CHOICES,
+            'supervisors': User.objects.filter(role='supervisor', is_active=True).order_by('first_name', 'last_name'),
+            'from_admin': from_admin,
+        }
+        return render(request, template_name, context)
     
     def post(self, request):
-        try:
-            # Get form data
-            username = request.POST.get('username', '').strip()
-            email = request.POST.get('email', '').strip()
-            first_name = request.POST.get('first_name', '').strip()
-            last_name = request.POST.get('last_name', '').strip()
-            role = request.POST.get('role', '').strip()
-            specialty = request.POST.get('specialty', '').strip()
-            year = request.POST.get('year', '').strip()
-            phone_number = request.POST.get('phone_number', '').strip()
-            registration_number = request.POST.get('registration_number', '').strip()
-            password1 = request.POST.get('password1', '').strip()
-            password2 = request.POST.get('password2', '').strip()
-            supervisor_id = request.POST.get('supervisor_choice', '').strip()
-            
-            # Also check for 'supervisor' field as backup
-            if not supervisor_id:
-                supervisor_id = request.POST.get('supervisor', '').strip()
-            
-            # Validation
-            errors = []
-            
-            if not username:
-                errors.append("Username is required")
-            elif User.objects.filter(username=username).exists():
-                errors.append("Username already exists")
+        form = UserCreateForm(request.POST)
+        from_admin = request.GET.get('next', '').startswith('/admin/') or 'admin' in request.path
+        template_name = 'users/user_create_admin.html' if from_admin else 'users/user_create.html'
+        
+        if form.is_valid():
+            try:
+                # Create user using the form
+                user = form.save(commit=False)
+                user.created_by = request.user
+                user.modified_by = request.user
+                user.is_active = True
+                user.save()
                 
-            if not email:
-                errors.append("Email is required")
-            elif User.objects.filter(email=email).exists():
-                errors.append("Email already exists")
+                messages.success(request, f'User {user.get_display_name()} created successfully!')
                 
-            if not first_name:
-                errors.append("First name is required")
+                # Redirect based on source
+                next_url = request.GET.get('next')
+                if next_url and next_url.startswith('/admin/'):
+                    return redirect('admin:users_user_changelist')
+                return redirect('users:user_list')
                 
-            if not last_name:
-                errors.append("Last name is required")
-                
-            if not role:
-                errors.append("Role is required")
-                
-            if not password1:
-                errors.append("Password is required")
-            elif password1 != password2:
-                errors.append("Passwords do not match")
-            elif len(password1) < 8:
-                errors.append("Password must be at least 8 characters")
-                
-            # Role-specific validation
-            if role in ['pg', 'supervisor'] and not specialty:
-                errors.append("Specialty is required for PGs and Supervisors")
-                
-            if role == 'pg':
-                if not year:
-                    errors.append("Year is required for PGs")
-                if not supervisor_id:
-                    errors.append("Supervisor is required for PGs")
-                    
-            if errors:
-                for error in errors:
-                    messages.error(request, error)
-                return render(request, 'users/user_create.html')
-            
-            # Create user
-            user = User(
-                username=username,
-                email=email,
-                first_name=first_name,
-                last_name=last_name,
-                role=role,
-                specialty=specialty if role in ['pg', 'supervisor'] else None,
-                year=year if role == 'pg' else None,
-                phone_number=phone_number,
-                registration_number=registration_number,
-                is_active=True
-            )
-            
-            # Set supervisor for PG users
-            if role == 'pg' and supervisor_id:
-                try:
-                    supervisor = User.objects.get(id=supervisor_id, role='supervisor')
-                    user.supervisor = supervisor
-                except User.DoesNotExist:
-                    messages.error(request, "Selected supervisor not found")
-                    return render(request, 'users/user_create.html')
-            
-            user.set_password(password1)
-            user.save()
-            
-            messages.success(request, f'User {user.get_display_name()} created successfully!')
-            return redirect('users:user_list')
-            
-        except Exception as e:
-            messages.error(request, f'Error creating user: {str(e)}')
-            return render(request, 'users/user_create.html')
-
+            except Exception as e:
+                messages.error(request, f'Error creating user: {str(e)}')
+        
+        # If form is not valid or exception occurred, render form with errors
+        context = {
+            'form': form,
+            'page_title': 'Create New User',
+            'user_roles': USER_ROLES,
+            'specialty_choices': SPECIALTY_CHOICES,
+            'year_choices': YEAR_CHOICES,
+            'supervisors': User.objects.filter(role='supervisor', is_active=True).order_by('first_name', 'last_name'),
+            'from_admin': from_admin,
+        }
+        return render(request, template_name, context)
 
 class UserEditView(AdminRequiredMixin, UpdateView):
     """Edit user (admin only)"""

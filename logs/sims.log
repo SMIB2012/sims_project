@@ -16277,3 +16277,508 @@ INFO 2025-06-26 18:25:15,548 basehttp 19504 8080 "GET /admin/login/?next=/admin/
 INFO 2025-06-26 18:26:55,206 basehttp 19504 18444 "GET /admin/ HTTP/1.1" 200 140761
 INFO 2025-06-26 18:26:55,754 basehttp 19504 18444 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
 INFO 2025-06-26 18:26:56,758 basehttp 19504 18444 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:05:54,881 autoreload 7788 18160 Watching for file changes with StatReloader
+INFO 2025-06-26 21:05:55,311 wsgi 7788 18744 SIMS WSGI application initialized successfully
+INFO 2025-06-26 21:06:11,084 basehttp 7788 11608 "GET /admin/ HTTP/1.1" 200 140452
+INFO 2025-06-26 21:06:11,170 basehttp 7788 11608 "GET /static/admin/css/base.css HTTP/1.1" 200 21310
+INFO 2025-06-26 21:06:11,853 basehttp 7788 21484 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+WARNING 2025-06-26 21:06:11,872 log 7788 11608 Not Found: /favicon.ico
+WARNING 2025-06-26 21:06:11,873 basehttp 7788 11608 "GET /favicon.ico HTTP/1.1" 404 3548
+INFO 2025-06-26 21:06:12,833 basehttp 7788 21484 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:06:24,181 basehttp 7788 11608 "GET /admin/ HTTP/1.1" 200 140452
+INFO 2025-06-26 21:06:24,269 basehttp 7788 21484 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:06:24,878 basehttp 7788 11608 "GET /admin/ HTTP/1.1" 200 140452
+INFO 2025-06-26 21:06:24,967 basehttp 7788 21484 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:06:25,197 basehttp 7788 11608 "GET /admin/ HTTP/1.1" 200 140452
+INFO 2025-06-26 21:06:25,282 basehttp 7788 21484 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:06:25,493 basehttp 7788 11608 "GET /admin/ HTTP/1.1" 200 140452
+INFO 2025-06-26 21:06:25,562 basehttp 7788 21484 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:06:26,583 basehttp 7788 11608 "GET / HTTP/1.1" 302 0
+INFO 2025-06-26 21:06:26,612 basehttp 7788 11608 "GET /users/dashboard/ HTTP/1.1" 302 0
+INFO 2025-06-26 21:06:26,648 basehttp 7788 21484 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:06:26,668 basehttp 7788 11608 "GET /admin/ HTTP/1.1" 200 140452
+INFO 2025-06-26 21:06:26,740 basehttp 7788 21484 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:06:27,751 basehttp 7788 21484 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:08:34,153 basehttp 7788 20552 "GET /admin/?id=352b4e0e-166a-4160-a8eb-468169005e7c&vscodeBrowserReqId=1750954113816 HTTP/1.1" 302 0
+INFO 2025-06-26 21:08:34,178 basehttp 7788 20552 "GET /admin/login/?next=/admin/%3Fid%3D352b4e0e-166a-4160-a8eb-468169005e7c%26vscodeBrowserReqId%3D1750954113816 HTTP/1.1" 200 20737
+INFO 2025-06-26 21:10:05,651 basehttp 7788 17824 "GET /admin/ HTTP/1.1" 200 140309
+INFO 2025-06-26 21:10:05,769 basehttp 7788 17824 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:10:06,776 basehttp 7788 17824 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:10:18,951 basehttp 7788 17824 "GET /admin/ HTTP/1.1" 200 140309
+INFO 2025-06-26 21:10:19,012 basehttp 7788 17824 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:10:20,009 basehttp 7788 17824 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:10:31,595 basehttp 7788 17824 "GET /admin/users/user/add/ HTTP/1.1" 200 26205
+INFO 2025-06-26 21:10:33,434 basehttp 7788 17824 "GET /admin/users/user/ HTTP/1.1" 200 40894
+INFO 2025-06-26 21:10:34,538 basehttp 7788 17824 "GET /admin/cases/clinicalcase/ HTTP/1.1" 200 18983
+ERROR 2025-06-26 21:10:35,672 log 7788 17824 Internal Server Error: /admin/logbook/logbookentry/
+Traceback (most recent call last):
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 880, in _resolve_lookup
+    current = current[bit]
+              ~~~~~~~^^^^^
+TypeError: 'LogbookEntry' object is not subscriptable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 890, in _resolve_lookup
+    current = getattr(current, bit)
+AttributeError: 'LogbookEntry' object has no attribute 'role'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 896, in _resolve_lookup
+    current = current[int(bit)]
+                      ~~~^^^^^
+ValueError: invalid literal for int() with base 10: 'role'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\defaulttags.py", line 238, in render
+    nodelist.append(node.render_annotated(context))
+                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\defaulttags.py", line 321, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 1064, in render
+    output = self.filter_expression.resolve(context)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 736, in resolve
+    arg_vals.append(arg.resolve(context))
+                    ~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 847, in resolve
+    value = self._resolve_lookup(context)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 903, in _resolve_lookup
+    raise VariableDoesNotExist(
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+    )  # missing attribute
+    ^
+django.template.base.VariableDoesNotExist: Failed lookup for key [role] in <LogbookEntry: ABC - Test Subject>
+ERROR 2025-06-26 21:10:35,685 basehttp 7788 17824 "GET /admin/logbook/logbookentry/ HTTP/1.1" 500 535325
+INFO 2025-06-26 21:10:37,289 basehttp 7788 17824 "GET /admin/rotations/rotation/ HTTP/1.1" 200 19942
+ERROR 2025-06-26 21:10:40,811 log 7788 17824 Internal Server Error: /users/pgs/bulk-upload/
+Traceback (most recent call last):
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PMC\sims_project-2\sims\users\decorators.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\contrib\auth\mixins.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\views\generic\base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "D:\PMC\sims_project-2\sims\users\views.py", line 547, in get
+    return render(request, 'users/pg_bulk_upload.html')
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: users/pg_bulk_upload.html
+ERROR 2025-06-26 21:10:40,814 basehttp 7788 17824 "GET /users/pgs/bulk-upload/ HTTP/1.1" 500 107847
+ERROR 2025-06-26 21:10:42,845 log 7788 17824 Internal Server Error: /users/reports/
+Traceback (most recent call last):
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PMC\sims_project-2\sims\users\decorators.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\contrib\auth\mixins.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\views\generic\base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "D:\PMC\sims_project-2\sims\users\views.py", line 575, in get
+    return render(request, 'users/user_reports.html')
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\defaulttags.py", line 471, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'api_user_statistics' not found. 'api_user_statistics' is not a valid view function or pattern name.
+ERROR 2025-06-26 21:10:42,849 basehttp 7788 17824 "GET /users/reports/ HTTP/1.1" 500 175709
+INFO 2025-06-26 21:10:44,361 basehttp 7788 17824 "GET /users/activity-log/ HTTP/1.1" 200 22387
+INFO 2025-06-26 21:10:46,885 basehttp 7788 17824 "GET /users/analytics/admin/ HTTP/1.1" 200 18628
+INFO 2025-06-26 21:10:50,843 basehttp 7788 17824 "GET /admin/users/user/ HTTP/1.1" 200 40894
+INFO 2025-06-26 21:12:45,083 basehttp 7788 18064 "GET /admin/users/user/add/?id=352b4e0e-166a-4160-a8eb-468169005e7c&vscodeBrowserReqId=1750954364766 HTTP/1.1" 302 0
+INFO 2025-06-26 21:12:45,095 basehttp 7788 18064 "GET /admin/login/?next=/admin/users/user/add/%3Fid%3D352b4e0e-166a-4160-a8eb-468169005e7c%26vscodeBrowserReqId%3D1750954364766 HTTP/1.1" 200 20752
+INFO 2025-06-26 21:14:15,963 basehttp 7788 9812 "GET /users/create/?id=352b4e0e-166a-4160-a8eb-468169005e7c&vscodeBrowserReqId=1750954455639 HTTP/1.1" 302 0
+INFO 2025-06-26 21:14:15,970 basehttp 7788 9812 "GET /users/login/?next=/users/create/%3Fid%3D352b4e0e-166a-4160-a8eb-468169005e7c%26vscodeBrowserReqId%3D1750954455639 HTTP/1.1" 200 21233
+INFO 2025-06-26 21:18:22,638 autoreload 7788 18160 D:\PMC\sims_project-2\sims\users\views.py changed, reloading.
+INFO 2025-06-26 21:18:23,602 autoreload 13136 4840 Watching for file changes with StatReloader
+INFO 2025-06-26 21:18:24,114 wsgi 13136 19720 SIMS WSGI application initialized successfully
+INFO 2025-06-26 21:18:47,830 autoreload 13136 4840 D:\PMC\sims_project-2\sims\users\views.py changed, reloading.
+INFO 2025-06-26 21:18:48,460 autoreload 17568 3116 Watching for file changes with StatReloader
+INFO 2025-06-26 21:18:48,869 wsgi 17568 17908 SIMS WSGI application initialized successfully
+INFO 2025-06-26 21:18:56,254 basehttp 17568 1500 "GET /admin/users/user/add/?id=352b4e0e-166a-4160-a8eb-468169005e7c&vscodeBrowserReqId=1750954735903 HTTP/1.1" 302 0
+INFO 2025-06-26 21:18:56,281 basehttp 17568 1500 "GET /admin/login/?next=/admin/users/user/add/%3Fid%3D352b4e0e-166a-4160-a8eb-468169005e7c%26vscodeBrowserReqId%3D1750954735903 HTTP/1.1" 200 20752
+INFO 2025-06-26 21:19:03,474 basehttp 17568 13176 "GET /users/create/?id=352b4e0e-166a-4160-a8eb-468169005e7c&vscodeBrowserReqId=1750954743166 HTTP/1.1" 302 0
+INFO 2025-06-26 21:19:03,483 basehttp 17568 13176 "GET /users/login/?next=/users/create/%3Fid%3D352b4e0e-166a-4160-a8eb-468169005e7c%26vscodeBrowserReqId%3D1750954743166 HTTP/1.1" 200 21233
+INFO 2025-06-26 21:23:38,664 basehttp 17568 15164 "GET / HTTP/1.1" 200 25032
+INFO 2025-06-26 21:23:38,691 basehttp 17568 7004 "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-06-26 21:23:38,720 basehttp 17568 7004 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 20660
+INFO 2025-06-26 21:23:38,740 basehttp 17568 13404 "GET /users/login/ HTTP/1.1" 200 21030
+INFO 2025-06-26 21:23:38,753 basehttp 17568 2544 "GET /users/dashboard/ HTTP/1.1" 302 0
+INFO 2025-06-26 21:23:38,760 basehttp 17568 2544 "GET /users/login/?next=/users/dashboard/ HTTP/1.1" 200 21159
+INFO 2025-06-26 21:23:38,765 basehttp 17568 19000 "GET /users/create/ HTTP/1.1" 302 0
+INFO 2025-06-26 21:23:38,771 basehttp 17568 19000 "GET /users/login/?next=/users/create/ HTTP/1.1" 200 21156
+INFO 2025-06-26 21:23:38,802 basehttp 17568 18536 "GET /admin/users/user/add/ HTTP/1.1" 302 0
+INFO 2025-06-26 21:23:38,811 basehttp 17568 18536 "GET /admin/login/?next=/admin/users/user/add/ HTTP/1.1" 200 20675
+INFO 2025-06-26 21:27:20,194 basehttp 17568 12316 "GET /admin/ HTTP/1.1" 200 140309
+INFO 2025-06-26 21:27:20,326 basehttp 17568 12316 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:27:21,325 basehttp 17568 12316 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:27:27,653 basehttp 17568 12316 "GET /admin/users/user/add/ HTTP/1.1" 200 26205
+INFO 2025-06-26 21:27:37,589 basehttp 17568 12316 "GET /admin/users/user/add/ HTTP/1.1" 200 26205
+INFO 2025-06-26 21:28:19,544 basehttp 17568 12316 "GET /admin/users/user/create/ HTTP/1.1" 302 0
+INFO 2025-06-26 21:28:19,566 basehttp 17568 12316 "GET /admin/users/user/create/change/ HTTP/1.1" 302 0
+INFO 2025-06-26 21:28:19,612 basehttp 17568 12316 "GET /admin/ HTTP/1.1" 200 140637
+INFO 2025-06-26 21:28:19,950 basehttp 17568 12316 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:28:20,957 basehttp 17568 12316 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:29:21,096 autoreload 17568 3116 D:\PMC\sims_project-2\sims\users\admin.py changed, reloading.
+INFO 2025-06-26 21:29:22,187 autoreload 13072 18604 Watching for file changes with StatReloader
+INFO 2025-06-26 21:29:22,581 wsgi 13072 9252 SIMS WSGI application initialized successfully
+INFO 2025-06-26 21:29:35,095 autoreload 13072 18604 D:\PMC\sims_project-2\sims\users\admin.py changed, reloading.
+INFO 2025-06-26 21:29:35,845 autoreload 18528 12824 Watching for file changes with StatReloader
+INFO 2025-06-26 21:29:36,183 wsgi 18528 17372 SIMS WSGI application initialized successfully
+INFO 2025-06-26 21:31:06,623 autoreload 18528 12824 D:\PMC\sims_project-2\sims\users\admin.py changed, reloading.
+INFO 2025-06-26 21:31:07,282 autoreload 11724 15892 Watching for file changes with StatReloader
+INFO 2025-06-26 21:31:07,629 wsgi 11724 2684 SIMS WSGI application initialized successfully
+INFO 2025-06-26 21:32:19,309 basehttp 11724 7096 "GET /admin/ HTTP/1.1" 200 140309
+INFO 2025-06-26 21:32:19,424 basehttp 11724 7096 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:32:20,424 basehttp 11724 7096 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 21:32:22,860 basehttp 11724 7096 "GET /admin/users/user/add/ HTTP/1.1" 302 0
+INFO 2025-06-26 21:32:23,019 basehttp 11724 7096 "GET /users/create/?next=/admin/users/user/ HTTP/1.1" 200 34365
+INFO 2025-06-26 21:32:38,951 basehttp 11724 7096 "GET /users/create/?next=/admin/users/user/ HTTP/1.1" 200 34365
+INFO 2025-06-26 21:33:25,298 basehttp 11724 7096 "GET /users/create/?next=/admin/users/user/ HTTP/1.1" 200 34365
+ERROR 2025-06-26 21:40:44,599 log 11724 2352 Internal Server Error: /users/create/
+Traceback (most recent call last):
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 505, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'else'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\PMC\sims_project-2\sims\users\decorators.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\contrib\auth\mixins.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\views\generic\base.py", line 144, in dispatch
+    return handler(request, *args, **kwargs)
+  File "D:\PMC\sims_project-2\sims\users\views.py", line 287, in get
+    return render(request, 'users/user_create.html', context)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\loader.py", line 15, in get_template
+    return engine.get_template(template_name)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
+    return Template(self.engine.get_template(template_name), self)
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\engine.py", line 175, in get_template
+    template, origin = self.find_template(template_name)
+                       ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\engine.py", line 157, in find_template
+    template = loader.get_template(name, skip=skip)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
+    template = super().get_template(template_name, skip)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
+    return Template(
+        contents,
+    ...<2 lines>...
+        self.engine,
+    )
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 154, in __init__
+    self.nodelist = self.compile_nodelist()
+                    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 200, in compile_nodelist
+    return parser.parse()
+           ~~~~~~~~~~~~^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 507, in parse
+    self.invalid_block_tag(token, command, parse_until)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\base.py", line 568, in invalid_block_tag
+    raise self.error(
+    ...<3 lines>...
+    )
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 587: 'else'. Did you forget to register or load this tag?
+ERROR 2025-06-26 21:40:44,609 basehttp 11724 2352 "GET /users/create/?next=/admin/users/user/ HTTP/1.1" 500 194401
+INFO 2025-06-26 22:10:33,613 autoreload 21792 21744 Watching for file changes with StatReloader
+INFO 2025-06-26 22:10:34,098 wsgi 21792 22520 SIMS WSGI application initialized successfully
+INFO 2025-06-26 22:12:12,386 basehttp 21792 3512 "GET /admin/ HTTP/1.1" 200 140309
+INFO 2025-06-26 22:12:12,418 basehttp 21792 3512 "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-06-26 22:12:12,535 basehttp 21792 3512 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 22:12:13,527 basehttp 21792 3512 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 22:12:14,776 basehttp 21792 3512 "GET /admin/users/user/add/ HTTP/1.1" 302 0
+INFO 2025-06-26 22:12:15,114 basehttp 21792 3512 "GET /users/create/?next=/admin/users/user/ HTTP/1.1" 200 32227
+INFO 2025-06-26 22:12:43,475 basehttp 21792 3512 "GET /admin/ HTTP/1.1" 200 140309
+INFO 2025-06-26 22:12:43,565 basehttp 21792 3512 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 22:12:44,559 basehttp 21792 3512 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1253
+INFO 2025-06-26 22:15:31,404 basehttp 21792 3696 "GET /users/create/?next=/admin/users/user/ HTTP/1.1" 302 0
+INFO 2025-06-26 22:15:31,428 basehttp 21792 3696 "GET /users/login/?next=/users/create/%3Fnext%3D/admin/users/user/ HTTP/1.1" 200 21180
+INFO 2025-06-26 22:16:15,744 basehttp 21792 15012 "GET /users/create/?next=/admin/users/user/ HTTP/1.1" 302 0
+INFO 2025-06-26 22:16:15,759 basehttp 21792 4072 "GET /users/login/?next=/users/create/%3Fnext%3D/admin/users/user/ HTTP/1.1" 200 21180
+INFO 2025-06-26 22:17:31,354 basehttp 21792 22004 "GET /users/create/?next=/admin/users/user/ HTTP/1.1" 200 23745
+INFO 2025-06-26 22:18:30,832 basehttp 21792 22004 "POST /users/create/?next=/admin/users/user/ HTTP/1.1" 302 0
+INFO 2025-06-26 22:18:30,878 basehttp 21792 22004 "GET /admin/users/user/ HTTP/1.1" 200 42267
+INFO 2025-06-26 22:18:51,819 basehttp 21792 22004 "GET /admin/users/user/ HTTP/1.1" 200 41976
+INFO 2025-06-26 22:23:39,172 autoreload 21792 21744 D:\PMC\sims_project-2\sims\users\admin.py changed, reloading.
+INFO 2025-06-26 22:23:40,231 autoreload 18804 19384 Watching for file changes with StatReloader
+INFO 2025-06-26 22:23:55,139 autoreload 18804 19384 D:\PMC\sims_project-2\sims\users\admin.py changed, reloading.
+INFO 2025-06-26 22:23:55,731 autoreload 900 13128 Watching for file changes with StatReloader
+INFO 2025-06-26 22:23:56,105 wsgi 900 17468 SIMS WSGI application initialized successfully
+INFO 2025-06-26 22:28:37,891 basehttp 900 17272 "GET /admin/users/user/ HTTP/1.1" 200 41976
+INFO 2025-06-26 22:28:41,371 basehttp 900 17272 "GET /admin/users/user/ HTTP/1.1" 200 41976
+INFO 2025-06-26 22:28:41,830 basehttp 900 17272 "GET /admin/users/user/ HTTP/1.1" 200 41976
+INFO 2025-06-26 22:28:41,958 basehttp 900 17272 "GET /admin/users/user/ HTTP/1.1" 200 41976
+INFO 2025-06-26 22:28:42,103 basehttp 900 17272 "GET /admin/users/user/ HTTP/1.1" 200 41976
+INFO 2025-06-26 22:28:42,222 basehttp 900 17272 "GET /admin/users/user/ HTTP/1.1" 200 41976
+INFO 2025-06-26 22:28:42,338 basehttp 900 17272 "GET /admin/users/user/ HTTP/1.1" 200 41976
+INFO 2025-06-26 22:28:49,608 basehttp 900 17272 "GET /admin/users/user/ HTTP/1.1" 200 41976
+INFO 2025-06-26 22:29:24,715 basehttp 900 22488 "GET /admin/users/user/?id=90e8eba1-3778-4ae6-b026-eb22e74f58a6&vscodeBrowserReqId=1750958964395 HTTP/1.1" 302 0
+INFO 2025-06-26 22:29:24,732 basehttp 900 22488 "GET /admin/login/?next=/admin/users/user/%3Fid%3D90e8eba1-3778-4ae6-b026-eb22e74f58a6%26vscodeBrowserReqId%3D1750958964395 HTTP/1.1" 200 20748
+INFO 2025-06-26 22:30:45,654 autoreload 900 13128 D:\PMC\sims_project-2\sims\users\admin.py changed, reloading.
+INFO 2025-06-26 22:30:46,426 autoreload 20284 16288 Watching for file changes with StatReloader
+INFO 2025-06-26 22:30:46,880 wsgi 20284 13028 SIMS WSGI application initialized successfully
+INFO 2025-06-26 22:35:56,910 autoreload 20284 16288 D:\PMC\sims_project-2\sims\users\admin.py changed, reloading.
+INFO 2025-06-26 22:35:57,611 autoreload 11120 19180 Watching for file changes with StatReloader
+INFO 2025-06-26 22:35:58,046 wsgi 11120 20644 SIMS WSGI application initialized successfully
+INFO 2025-06-26 22:36:28,079 basehttp 11120 6368 "GET /admin/users/user/?id=90e8eba1-3778-4ae6-b026-eb22e74f58a6&vscodeBrowserReqId=1750959387737 HTTP/1.1" 302 0
+INFO 2025-06-26 22:36:28,112 basehttp 11120 6368 "GET /admin/login/?next=/admin/users/user/%3Fid%3D90e8eba1-3778-4ae6-b026-eb22e74f58a6%26vscodeBrowserReqId%3D1750959387737 HTTP/1.1" 200 20748
+INFO 2025-06-26 22:38:56,889 basehttp 11120 15900 "GET /admin/users/user/ HTTP/1.1" 200 41976
+INFO 2025-06-26 22:39:04,177 basehttp 11120 15900 "GET /admin/users/user/ HTTP/1.1" 200 41976
+INFO 2025-06-26 22:39:05,925 basehttp 11120 15900 "GET /admin/ HTTP/1.1" 200 140309
+INFO 2025-06-26 22:39:06,063 basehttp 11120 15900 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1249
+INFO 2025-06-26 22:39:07,069 basehttp 11120 15900 "GET /users/api/admin/stats/?role=pg&period=all HTTP/1.1" 200 1249
+INFO 2025-06-26 22:41:02,037 autoreload 11120 19180 D:\PMC\sims_project-2\sims\users\admin.py changed, reloading.
+INFO 2025-06-26 22:41:04,064 autoreload 21776 13440 Watching for file changes with StatReloader
+INFO 2025-06-26 22:41:04,599 wsgi 21776 22320 SIMS WSGI application initialized successfully
+INFO 2025-06-26 22:41:15,038 autoreload 21776 13440 D:\PMC\sims_project-2\sims\users\admin.py changed, reloading.
+INFO 2025-06-26 22:41:15,841 autoreload 16032 13488 Watching for file changes with StatReloader
+INFO 2025-06-26 22:41:16,288 wsgi 16032 9440 SIMS WSGI application initialized successfully
+INFO 2025-06-26 22:43:55,851 autoreload 16032 13488 D:\PMC\sims_project-2\sims\users\admin.py changed, reloading.
+INFO 2025-06-26 22:43:56,627 autoreload 5200 21456 Watching for file changes with StatReloader
+INFO 2025-06-26 22:43:57,012 wsgi 5200 19832 SIMS WSGI application initialized successfully
+INFO 2025-06-26 22:44:17,300 basehttp 5200 21776 "GET /admin/users/user/?id=90e8eba1-3778-4ae6-b026-eb22e74f58a6&vscodeBrowserReqId=1750959856954 HTTP/1.1" 302 0
+INFO 2025-06-26 22:44:17,386 basehttp 5200 21776 "GET /admin/login/?next=/admin/users/user/%3Fid%3D90e8eba1-3778-4ae6-b026-eb22e74f58a6%26vscodeBrowserReqId%3D1750959856954 HTTP/1.1" 200 20748
+ERROR 2025-06-26 22:44:30,150 log 5200 9836 Internal Server Error: /admin/users/user/
+Traceback (most recent call last):
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\contrib\admin\options.py", line 688, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\utils\decorators.py", line 134, in _wrapper_view
+    response = view_func(request, *args, **kwargs)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\views\decorators\cache.py", line 62, in _wrapper_view_func
+    response = view_func(request, *args, **kwargs)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\contrib\admin\sites.py", line 242, in inner
+    return view(request, *args, **kwargs)
+  File "D:\PMC\sims_project-2\sims\users\admin.py", line 103, in changelist_view
+    if hasattr(response, 'content'):
+       ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\response.py", line 135, in content
+    raise ContentNotRenderedError(
+        "The response content must be rendered before it can be accessed."
+    )
+django.template.response.ContentNotRenderedError: The response content must be rendered before it can be accessed.
+ERROR 2025-06-26 22:44:30,154 basehttp 5200 9836 "GET /admin/users/user/ HTTP/1.1" 500 95562
+ERROR 2025-06-26 22:44:32,314 log 5200 9836 Internal Server Error: /admin/users/user/
+Traceback (most recent call last):
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\contrib\admin\options.py", line 688, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\utils\decorators.py", line 134, in _wrapper_view
+    response = view_func(request, *args, **kwargs)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\views\decorators\cache.py", line 62, in _wrapper_view_func
+    response = view_func(request, *args, **kwargs)
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\contrib\admin\sites.py", line 242, in inner
+    return view(request, *args, **kwargs)
+  File "D:\PMC\sims_project-2\sims\users\admin.py", line 103, in changelist_view
+    if hasattr(response, 'content'):
+       ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "d:\PMC\sims_project-2\.venv\Lib\site-packages\django\template\response.py", line 135, in content
+    raise ContentNotRenderedError(
+        "The response content must be rendered before it can be accessed."
+    )
+django.template.response.ContentNotRenderedError: The response content must be rendered before it can be accessed.
+ERROR 2025-06-26 22:44:32,317 basehttp 5200 9836 "GET /admin/users/user/ HTTP/1.1" 500 95562
+INFO 2025-06-26 22:45:47,648 autoreload 5200 21456 D:\PMC\sims_project-2\sims\users\admin.py changed, reloading.
+INFO 2025-06-26 22:45:48,427 autoreload 15792 3512 Watching for file changes with StatReloader
+INFO 2025-06-26 22:45:48,823 wsgi 15792 15712 SIMS WSGI application initialized successfully
+INFO 2025-06-26 22:46:10,656 basehttp 15792 11524 "GET /admin/users/user/?id=90e8eba1-3778-4ae6-b026-eb22e74f58a6&vscodeBrowserReqId=1750959970287 HTTP/1.1" 302 0
+INFO 2025-06-26 22:46:10,691 basehttp 15792 11524 "GET /admin/login/?next=/admin/users/user/%3Fid%3D90e8eba1-3778-4ae6-b026-eb22e74f58a6%26vscodeBrowserReqId%3D1750959970287 HTTP/1.1" 200 20748
+INFO 2025-06-26 22:47:15,186 basehttp 15792 19156 "GET /admin/users/user/ HTTP/1.1" 200 41976
+INFO 2025-06-26 22:47:21,367 basehttp 15792 19156 "GET /admin/users/user/ HTTP/1.1" 200 41976
