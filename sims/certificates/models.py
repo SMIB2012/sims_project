@@ -10,14 +10,16 @@ User = get_user_model()
 
 def certificate_upload_path(instance, filename):
     """Generate upload path for certificate files"""
-    # Upload to certificates/pg_username/year/filename
+    # Upload to certificates/resident_username/year/filename
     year = timezone.now().year
-    return f'certificates/{instance.pg.username}/{year}/{filename}'
+    username = instance.pg.user.username if instance.pg and instance.pg.user else "unknown_resident"
+    return f'certificates/{username}/{year}/{filename}'
 
 def additional_documents_upload_path(instance, filename):
     """Generate upload path for additional certificate documents"""
     year = timezone.now().year
-    return f'certificates/{instance.pg.username}/{year}/additional/{filename}'
+    username = instance.pg.user.username if instance.pg and instance.pg.user else "unknown_resident"
+    return f'certificates/{username}/{year}/additional/{filename}'
 
 class CertificateType(models.Model):
     """
@@ -139,11 +141,10 @@ class Certificate(models.Model):
     
     # Core certificate information
     pg = models.ForeignKey(
-        User,
+        'users.ResidentProfile', # Changed from User to ResidentProfile
         on_delete=models.CASCADE,
-        related_name='certificates',
-        limit_choices_to={'role': 'pg'},
-        help_text="Postgraduate who earned this certificate"
+        related_name='certificates_earned', # Changed related_name
+        help_text="Postgraduate Resident who earned/requested this certificate"
     )
     
     certificate_type = models.ForeignKey(
@@ -265,13 +266,31 @@ class Certificate(models.Model):
         blank=True,
         help_text="Date and time when certificate was verified"
     )
+
+    # New fields for Certificate Request System
+    delivery_mode = models.CharField(
+        max_length=20,
+        choices=[('soft_copy', 'Soft Copy'), ('hard_copy', 'Hard Copy')],
+        blank=True, # Might not be applicable for all certs, or set on request
+        null=True,
+        help_text="Mode of delivery for requested certificates"
+    )
+    issued_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='issued_certificates',
+        limit_choices_to={'role': 'admin'},
+        help_text="Admin who issued this certificate (for internally generated certs)"
+    )
     
     class Meta:
         verbose_name = "Certificate"
         verbose_name_plural = "Certificates"
-        ordering = ['-created_at', 'pg__last_name']
+        ordering = ['-created_at', 'pg__user__last_name'] # Changed from pg__last_name
         indexes = [
-            models.Index(fields=['pg', 'status']),
+            models.Index(fields=['pg', 'status']), # pg is now ResidentProfile
             models.Index(fields=['certificate_type', 'status']),
             models.Index(fields=['issue_date']),
             models.Index(fields=['expiry_date']),
@@ -288,7 +307,7 @@ class Certificate(models.Model):
         ]
     
     def __str__(self):
-        pg_name = self.pg.get_full_name() if self.pg else "No PG"
+        pg_name = self.pg.user.get_full_name() if self.pg and self.pg.user else "No PG"
         return f"{self.title} - {pg_name}"
     
     def clean(self):
@@ -500,16 +519,22 @@ class CertificateReview(models.Model):
     def clean(self):
         """Validate review data"""
         # Ensure reviewer has permission to review this certificate
-        if self.reviewer and self.certificate:
-            if (self.reviewer.role == 'supervisor' and 
-                self.reviewer != self.certificate.pg.supervisor):
-                raise ValidationError(
-                    "Supervisor can only review certificates of their assigned PGs"
-                )
+        if self.reviewer and self.certificate and self.certificate.pg and self.certificate.pg.user:
+            # self.reviewer is a User instance
+            # self.certificate.pg is a ResidentProfile instance
+            # self.certificate.pg.supervisor is a SupervisorProfile instance
+
+            if self.reviewer.is_supervisor():
+                # Check if the reviewer is the supervisor of the PG who owns the certificate
+                pg_supervisor_user = getattr(getattr(self.certificate.pg, 'supervisor', None), 'user', None)
+                if self.reviewer != pg_supervisor_user:
+                    raise ValidationError(
+                        "Supervisor can only review certificates of PGs they directly supervise."
+                    )
             
-            if (self.reviewer.role == 'pg'):
+            if self.reviewer.is_pg():
                 raise ValidationError(
-                    "PGs cannot review certificates"
+                    "PGs cannot review certificates."
                 )
     
     def save(self, *args, **kwargs):
@@ -560,10 +585,10 @@ class CertificateStatistics(models.Model):
     """
     
     pg = models.OneToOneField(
-        User,
+        'users.ResidentProfile', # Changed from User
         on_delete=models.CASCADE,
-        related_name='certificate_stats',
-        limit_choices_to={'role': 'pg'}
+        related_name='certificate_stats'
+        # limit_choices_to is not needed as ResidentProfile is already filtered by user role
     )
     
     total_certificates = models.PositiveIntegerField(default=0)
@@ -588,7 +613,8 @@ class CertificateStatistics(models.Model):
     
     def update_statistics(self):
         """Update statistics based on current certificates"""
-        certificates = self.pg.certificates.all()
+        # pg is now a ResidentProfile instance
+        certificates = self.pg.certificates_earned.all() # Use new related_name
         
         self.total_certificates = certificates.count()
         self.approved_certificates = certificates.filter(status='approved').count()
@@ -620,8 +646,9 @@ class CertificateStatistics(models.Model):
     @classmethod
     def update_all_statistics(cls):
         """Update statistics for all PGs"""
-        from sims.users.models import User
+        from sims.users.models import ResidentProfile # Changed from User
         
-        for pg in User.objects.filter(role='pg', is_active=True):
-            stats, created = cls.objects.get_or_create(pg=pg)
+        # Iterate over ResidentProfile instances directly
+        for resident_profile in ResidentProfile.objects.filter(user__is_active=True):
+            stats, created = cls.objects.get_or_create(pg=resident_profile)
             stats.update_statistics()

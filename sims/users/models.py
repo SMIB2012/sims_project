@@ -232,7 +232,7 @@ class User(AbstractUser):
     def get_dashboard_url(self):
         """Get appropriate dashboard URL based on role"""
         if self.is_admin():
-            return reverse('users:admin_dashboard')
+            return reverse('admin:index')
         elif self.is_supervisor():
             return reverse('users:supervisor_dashboard')
         elif self.is_pg():
@@ -258,41 +258,221 @@ class User(AbstractUser):
         }
         return role_classes.get(self.role, 'badge-secondary')
     
-    # Statistics methods (for analytics)    def get_documents_pending_count(self):
+    # Statistics methods (for analytics)
+    # IMPORTANT: The get_documents_pending_count method will need to be updated
+    # after Profile models are fully integrated with other apps (Rotations, Certificates).
+    # It currently relies on User.get_assigned_pgs() and assumes related models
+    # link directly to User or will be adapted smoothly.
+    def get_documents_pending_count(self):
         """Get count of documents pending review (for supervisors)"""
         if not self.is_supervisor():
             return 0
         
         count = 0
-        # Import here to avoid circular imports
-        from sims.certificates.models import Certificate
-        from sims.rotations.models import Rotation
-        from sims.logbook.models import LogbookEntry
-        from sims.cases.models import ClinicalCase
-        
-        # Count pending documents assigned to this supervisor
-        for pg in self.get_assigned_pgs():
-            count += Certificate.objects.filter(pg=pg, status='pending').count()
-            count += Rotation.objects.filter(pg=pg, status='pending').count()
-            count += LogbookEntry.objects.filter(pg=pg, status='pending').count()
-            count += ClinicalCase.objects.filter(pg=pg, status='pending').count()
+        try:
+            # Import here to avoid circular imports
+            from django.apps import apps
+
+            # Check if apps exist before importing
+            if apps.is_installed('sims.certificates'):
+                from sims.certificates.models import Certificate
+                for pg in self.get_assigned_pgs():
+                    count += Certificate.objects.filter(pg=pg, status='pending').count()
+
+            if apps.is_installed('sims.rotations'):
+                from sims.rotations.models import Rotation
+                for pg in self.get_assigned_pgs():
+                    count += Rotation.objects.filter(pg=pg, status='pending').count()
+
+            if apps.is_installed('sims.logbook'):
+                from sims.logbook.models import LogbookEntry
+                for pg in self.get_assigned_pgs():
+                    count += LogbookEntry.objects.filter(pg=pg, status='pending').count()
+
+            if apps.is_installed('sims.cases'):
+                from sims.cases.models import ClinicalCase
+                for pg in self.get_assigned_pgs():
+                    count += ClinicalCase.objects.filter(pg=pg, status='pending').count()
+
+        except ImportError:
+            # Handle case where related models don't exist yet
+            pass
         
         return count
+
+# Profile Models
+
+# Upload path helper functions (must be top-level for migrations)
+def upload_supervisor_cv(instance, filename):
+    return f'supervisors/{instance.user.username}/cv/{filename}'
+
+def upload_supervisor_certificate(instance, filename):
+    return f'supervisors/{instance.user.username}/certificates/{filename}'
+
+def upload_supervisor_publications(instance, filename):
+    return f'supervisors/{instance.user.username}/publications/{filename}'
+
+def upload_resident_initial_credential(instance, filename):
+    # Adding field name to path can be tricky if field name changes.
+    # For simplicity, keeping a generic 'initial_credentials' folder.
+    return f'residents/{instance.user.username}/initial_credentials/{filename}'
+
+def upload_resident_ongoing_document(instance, filename):
+    return f'residents/{instance.user.username}/ongoing_documents/{filename}'
+
+# Choices for SupervisorProfile
+SUPERVISOR_TYPE_CHOICES = (
+    ('fcps', 'FCPS'),
+    ('md_ms', 'MD/MS'),
+    ('diploma', 'Diploma'),
+)
+
+class SupervisorProfile(models.Model):
+    """Profile for Supervisors, linked to the User model."""
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name='supervisor_profile',
+        limit_choices_to={'role': 'supervisor'}
+    )
+    supervisor_type = models.CharField(
+        max_length=20,
+        choices=SUPERVISOR_TYPE_CHOICES,
+        help_text="Type of supervisor qualification"
+    )
+    department = models.ForeignKey(
+        'rotations.Department',  # Use string to avoid circular import if Department is in another app
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='supervisors_in_department',
+        help_text="Department affiliation"
+    )
+    # Document uploads
+    cv_file = models.FileField(
+        upload_to=upload_supervisor_cv,
+        blank=True,
+        null=True,
+        help_text="Curriculum Vitae document"
+    )
+    specialty_certificate_file = models.FileField(
+        upload_to=upload_supervisor_certificate,
+        blank=True,
+        null=True,
+        help_text="Specialty/qualification certificate"
+    )
+    publications_list_file = models.FileField(
+        upload_to=upload_supervisor_publications,
+        blank=True,
+        null=True,
+        help_text="List of publications or significant achievements"
+    )
+
+    # Verification status by Admin (example fields)
+    cv_verified = models.BooleanField(default=False, help_text="Admin verified CV")
+    specialty_certificate_verified = models.BooleanField(default=False, help_text="Admin verified specialty certificate")
     
-    def get_documents_submitted_count(self):
-        """Get count of documents submitted by this PG"""
-        if not self.is_pg():
-            return 0
-          # Import here to avoid circular imports
-        from sims.certificates.models import Certificate
-        from sims.rotations.models import Rotation
-        from sims.logbook.models import LogbookEntry
-        from sims.cases.models import ClinicalCase
-        
-        count = 0
-        count += Certificate.objects.filter(pg=self).count()
-        count += Rotation.objects.filter(pg=self).count()
-        count += LogbookEntry.objects.filter(pg=self).count()
-        count += ClinicalCase.objects.filter(pg=self).count()
-        
-        return count
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Supervisor Profile: {self.user.get_full_name()}"
+
+    class Meta:
+        verbose_name = "Supervisor Profile"
+        verbose_name_plural = "Supervisor Profiles"
+
+# Choices for ResidentProfile
+TRAINING_TYPE_CHOICES = (
+    ('fcps', 'FCPS'),
+    ('md_ms', 'MD/MS'),
+    ('diploma', 'Diploma'),
+    ('other', 'Other'),
+)
+
+# Note: resident_document_path_factory removed as it's replaced by specific top-level functions.
+
+class ResidentProfile(models.Model):
+    """Profile for Postgraduate Residents, linked to the User model."""
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name='resident_profile',
+        limit_choices_to={'role': 'pg'}
+    )
+    training_type = models.CharField(
+        max_length=20,
+        choices=TRAINING_TYPE_CHOICES,
+        help_text="Type of training program"
+    )
+    program_duration = models.PositiveIntegerField(
+        help_text="Duration of the training program in years"
+    )
+    supervisor = models.ForeignKey(
+        SupervisorProfile,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True, # A resident might not be assigned a supervisor initially
+        related_name='assigned_residents',
+        help_text="Assigned supervisor"
+    )
+    department = models.ForeignKey(
+        'rotations.Department',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True, # May not be in a specific department initially or between rotations
+        related_name='residents_in_department',
+        help_text="Current primary department (if any)"
+    )
+
+    # Initial Credentials
+    mbbs_certificate = models.FileField(upload_to=upload_resident_initial_credential, blank=True, null=True)
+    mbbs_certificate_verified = models.BooleanField(default=False)
+    fsc_certificate = models.FileField(upload_to=upload_resident_initial_credential, blank=True, null=True)
+    fsc_certificate_verified = models.BooleanField(default=False)
+    matric_certificate = models.FileField(upload_to=upload_resident_initial_credential, blank=True, null=True)
+    matric_certificate_verified = models.BooleanField(default=False)
+    pmdc_registration = models.FileField(upload_to=upload_resident_initial_credential, blank=True, null=True)
+    pmdc_registration_verified = models.BooleanField(default=False)
+    house_job_certificate = models.FileField(upload_to=upload_resident_initial_credential, blank=True, null=True)
+    house_job_certificate_verified = models.BooleanField(default=False)
+    experience_certificate = models.FileField(upload_to=upload_resident_initial_credential, blank=True, null=True)
+    experience_certificate_verified = models.BooleanField(default=False)
+    program_letter = models.FileField(upload_to=upload_resident_initial_credential, blank=True, null=True)
+    program_letter_verified = models.BooleanField(default=False)
+
+    # Ongoing Uploads
+    workshop_details_file = models.FileField(upload_to=upload_resident_ongoing_document, blank=True, null=True, help_text="Consolidated workshops details or zip")
+    workshop_details_verified = models.BooleanField(default=False)
+    imm_result_file = models.FileField(upload_to=upload_resident_ongoing_document, blank=True, null=True)
+    imm_result_verified = models.BooleanField(default=False)
+    final_exam_result_file = models.FileField(upload_to=upload_resident_ongoing_document, blank=True, null=True)
+    final_exam_result_verified = models.BooleanField(default=False)
+    thesis_file = models.FileField(upload_to=upload_resident_ongoing_document, blank=True, null=True)
+    thesis_verified = models.BooleanField(default=False)
+    wpba_records_file = models.FileField(upload_to=upload_resident_ongoing_document, blank=True, null=True, help_text="Workplace Based Assessments records")
+    wpba_records_verified = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Resident Profile: {self.user.get_full_name()}"
+
+    class Meta:
+        verbose_name = "Resident Profile"
+        verbose_name_plural = "Resident Profiles"
+
+    def clean(self):
+        super().clean()
+        # Ensure the linked user is a PG
+        if self.user and self.user.role != 'pg':
+            raise ValidationError("Resident profile must be linked to a Postgraduate user.")
+        # Ensure the assigned supervisor's user is a supervisor
+        if self.supervisor and self.supervisor.user.role != 'supervisor':
+            raise ValidationError("Assigned supervisor must have a 'supervisor' role.")
+
+    # get_documents_submitted_count was removed from User model.
+    # This functionality will be part of ResidentProfile or calculated based on it.

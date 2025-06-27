@@ -149,6 +149,15 @@ class Department(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    opd_schedule = models.TextField(
+        blank=True,
+        help_text="OPD schedule for the department (e.g., JSON or plain text)"
+    )
+    ot_schedule = models.TextField(
+        blank=True,
+        help_text="OT schedule for the department (e.g., JSON or plain text)"
+    )
     
     class Meta:
         verbose_name = "Department"
@@ -196,11 +205,11 @@ class Rotation(models.Model):
     
     # Core rotation information
     pg = models.ForeignKey(
-        User,
+        'users.ResidentProfile', # Changed from User
         on_delete=models.CASCADE,
-        related_name='rotations',
-        limit_choices_to={'role': 'pg'},
-        help_text="Postgraduate assigned to this rotation"
+        related_name='rotations_as_resident', # Changed related_name
+        # limit_choices_to is not directly applicable here as ResidentProfile is already filtered by user role
+        help_text="Postgraduate Resident assigned to this rotation"
     )
     
     department = models.ForeignKey(
@@ -218,12 +227,12 @@ class Rotation(models.Model):
     )
     
     supervisor = models.ForeignKey(
-        User,
+        'users.SupervisorProfile', # Changed from User
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='supervised_rotations',
-        limit_choices_to={'role': 'supervisor'},
+        related_name='rotations_as_supervisor', # Changed related_name
+        # limit_choices_to not needed as SupervisorProfile is already filtered
         help_text="Supervisor assigned to oversee this rotation"
     )
     
@@ -307,7 +316,7 @@ class Rotation(models.Model):
     class Meta:
         verbose_name = "Rotation"
         verbose_name_plural = "Rotations"
-        ordering = ['-start_date', 'pg__last_name']
+        ordering = ['-start_date', 'pg__user__last_name'] # Changed from pg__last_name
         indexes = [
             models.Index(fields=['pg', 'status']),
             models.Index(fields=['supervisor', 'status']),
@@ -324,7 +333,7 @@ class Rotation(models.Model):
         ]
     
     def __str__(self):
-        pg_name = self.pg.get_full_name() if self.pg else "No PG"
+        pg_name = self.pg.user.get_full_name() if self.pg and self.pg.user else "No PG"
         dept_name = self.department.name if self.department else "No Department"
         return f"{pg_name} - {dept_name} ({self.start_date} to {self.end_date})"
     
@@ -338,9 +347,9 @@ class Rotation(models.Model):
                 errors['end_date'] = "End date must be after start date"
             
             # Check for overlapping rotations for the same PG
-            if self.pg:
+            if self.pg and self.pg.user: # Check if pg and pg.user exist
                 overlapping = Rotation.objects.filter(
-                    pg=self.pg,
+                    pg=self.pg, # This still refers to the ResidentProfile instance
                     status__in=['planned', 'ongoing']
                 ).exclude(pk=self.pk)
                 
@@ -356,11 +365,12 @@ class Rotation(models.Model):
                 errors['department'] = "Department must belong to the selected hospital"
         
         # Validate supervisor specialty matches rotation department (if applicable)
-        if self.supervisor and self.pg:
-            if (hasattr(self.supervisor, 'specialty') and 
-                hasattr(self.pg, 'specialty') and
-                self.supervisor.specialty != self.pg.specialty):
-                # This is a warning, not an error
+        # Note: User model holds specialty, not the profile models directly as per original structure.
+        if self.supervisor and self.supervisor.user and self.pg and self.pg.user:
+            if (hasattr(self.supervisor.user, 'specialty') and
+                hasattr(self.pg.user, 'specialty') and
+                self.supervisor.user.specialty != self.pg.user.specialty):
+                # This is a warning, not an error; could be logged or handled in UI
                 pass
         
         if errors:
@@ -570,20 +580,33 @@ class RotationEvaluation(models.Model):
         """Validate evaluation data"""
         # Ensure evaluator has permission to evaluate this rotation
         if self.evaluator and self.rotation:
-            if (self.evaluator.role == 'supervisor' and 
-                self.evaluator != self.rotation.supervisor and
-                self.evaluator != self.rotation.pg.supervisor):
-                raise ValidationError(
-                    "Supervisor can only evaluate rotations they supervise"
-                )
+            # Ensure pg and pg.user exist before trying to access them
+            pg_user = getattr(getattr(self.rotation, 'pg', None), 'user', None)
+            rotation_supervisor_user = getattr(getattr(self.rotation, 'supervisor', None), 'user', None)
+            pg_general_supervisor_user = getattr(getattr(getattr(self.rotation, 'pg', None), 'supervisor', None), 'user', None)
+
+            if self.evaluator.is_supervisor():
+                is_rotation_supervisor = rotation_supervisor_user and (self.evaluator == rotation_supervisor_user)
+                is_pg_general_supervisor = pg_general_supervisor_user and (self.evaluator == pg_general_supervisor_user)
+
+                if not (is_rotation_supervisor or is_pg_general_supervisor):
+                    raise ValidationError(
+                        "Supervisor can only evaluate rotations they directly supervise or for PGs they generally supervise."
+                    )
             
-            if (self.evaluator.role == 'pg' and 
-                self.evaluator != self.rotation.pg and
-                self.evaluation_type not in ['peer', 'self']):
-                raise ValidationError(
-                    "PG can only do self or peer evaluations"
-                )
-    
+            if self.evaluator.is_pg():
+                if pg_user: # Check if pg_user is available
+                    if self.evaluator != pg_user and self.evaluation_type not in ['peer', 'self']:
+                         raise ValidationError(
+                            "PG can only do self or peer evaluations for their own rotations."
+                        )
+                    elif self.evaluator == pg_user and self.evaluation_type == 'peer':
+                        raise ValidationError("PG cannot do a 'peer' evaluation for themselves. Use 'self' evaluation.")
+                elif self.evaluation_type != 'peer': # If pg_user is None, only peer evaluation might be disallowed depending on rules
+                    # This case might need further clarification if a PG can evaluate a rotation without a PG assigned (unlikely)
+                    pass
+
+
     def get_score_grade(self):
         """Get letter grade based on score"""
         if self.score is None:

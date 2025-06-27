@@ -1,0 +1,63 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans 'Add User' %} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-user-plus me-2"></i>
+                        Add New User
+                    </h3>
+                    <div class="card-tools">
+                        <a href="{% url 'admin:users_user_changelist' %}" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Users
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Redirecting to Enhanced User Creation Form</strong><br>
+                        You will be redirected to our enhanced user creation interface for a better experience.
+                    </div>
+
+                    <div class="text-center">
+                        <a href="{% url 'users:user_create' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>
+                            Create New User
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-redirect after 2 seconds
+setTimeout(function() {
+    window.location.href = "{% url 'users:user_create' %}";
+}, 2000);
+</script>
+
+<style>
+.card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.card-header {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    border-bottom: none;
+}
+.alert-info {
+    border-left: 4px solid #007bff;
+    background: #f8f9ff;
+}
+</style>
+{% endblock %}

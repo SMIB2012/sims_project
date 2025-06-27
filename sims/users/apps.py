@@ -23,8 +23,9 @@ class UsersConfig(AppConfig):
         Import any signal handlers or perform app initialization.
         """
         try:
-            # Import signals if you have any (e.g., for notifications)
-            # import sims.users.signals
-            pass
+            # Import signals for profile creation
+            import sims.users.signals
         except ImportError:
+            # This might happen if signals.py doesn't exist yet or has import errors
+            # Handle gracefully during initial setup or migrations
             pass

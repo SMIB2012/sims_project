@@ -412,8 +412,44 @@ class UserFilterForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control form-control-sm'})
     )
 
-# Alias forms for backward compatibility with existing views
-UserProfileForm = ProfileEditForm
+class UserProfileForm(forms.ModelForm):
+    """Form for users to edit their own profile"""
+
+    class Meta:
+        model = User
+        fields = [
+            'first_name', 'last_name', 'email', 'phone_number',
+            'registration_number'
+        ]
+        widgets = {
+            'first_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'First Name'
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Last Name'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Email Address'
+            }),
+            'phone_number': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Phone Number'
+            }),
+            'registration_number': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Medical Registration Number'
+            })
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Make email required
+        self.fields['email'].required = True
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
 
 class PGSearchForm(forms.Form):
     """Search form for PG lists"""
@@ -438,3 +474,99 @@ class PGSearchForm(forms.Form):
         required=False,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+
+class UserCreateForm(forms.ModelForm):
+    """Enhanced user creation form for admin interface with proper Django form handling"""
+
+    password1 = forms.CharField(
+        label='Password',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter password',
+            'id': 'password1'
+        }),
+        help_text='Password must be at least 8 characters long.'
+    )
+
+    password2 = forms.CharField(
+        label='Password confirmation',
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Confirm password',
+            'id': 'password2'
+        }),
+        help_text='Enter the same password as before, for verification.'
+    )
+
+    role = forms.ChoiceField(
+        choices=USER_ROLES,
+        widget=forms.RadioSelect(),
+        required=True
+    )
+
+    specialty = forms.ChoiceField(
+        choices=[('', 'Select Specialty')] + list(SPECIALTY_CHOICES),
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    year = forms.ChoiceField(
+        choices=[('', 'Select Year')] + list(YEAR_CHOICES),
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    supervisor = forms.ModelChoiceField(
+        queryset=User.objects.filter(role='supervisor', is_active=True),
+        required=False,
+        empty_label="Select Supervisor",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'role',
+                 'specialty', 'year', 'supervisor', 'phone_number', 'registration_number']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'registration_number': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise ValidationError("Passwords don't match")
+        return password2
+
+    def clean(self):
+        cleaned_data = super().clean()
+        role = cleaned_data.get('role')
+        specialty = cleaned_data.get('specialty')
+        year = cleaned_data.get('year')
+        supervisor = cleaned_data.get('supervisor')
+
+        # Role-specific validation
+        if role == 'pg':
+            if not specialty:
+                raise ValidationError({'specialty': 'Specialty is required for Postgraduate users'})
+            if not year:
+                raise ValidationError({'year': 'Training year is required for Postgraduate users'})
+            if not supervisor:
+                raise ValidationError({'supervisor': 'Supervisor is required for Postgraduate users'})
+        elif role == 'supervisor':
+            if not specialty:
+                raise ValidationError({'specialty': 'Specialty is required for Supervisor users'})
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+        return user

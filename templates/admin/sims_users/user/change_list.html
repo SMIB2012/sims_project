@@ -1,0 +1,1088 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block title %}SIMS Users Management | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block content_title %}
+<h1>SIMS Users</h1>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+/* ============= MAIN CONTAINER STYLES ============= */
+.module {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    overflow: hidden;
+    margin: 1.5rem 0;
+    border: 1px solid #e2e8f0;
+}
+
+/* ============= HEADER ENHANCEMENT ============= */
+#content h1 {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white !important;
+    margin: 0 0 2rem 0 !important;
+    padding: 2rem !important;
+    font-size: 1.75rem !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+}
+
+#content h1::before {
+    content: "👥";
+    font-size: 2rem;
+}
+
+/* ============= HIDE ALL UNWANTED ELEMENTS ============= */
+#changelist-filter {
+    display: none !important;
+}
+
+.filtered {
+    margin-right: 0 !important;
+}
+
+/* Hide the entire filter sidebar completely */
+#changelist .filtered .results {
+    margin-right: 0 !important;
+}
+
+#changelist .filtered {
+    margin-right: 0 !important;
+}
+
+/* Force full width for the main content */
+.filtered .results, .filtered .actions {
+    margin-right: 0 !important;
+}
+
+/* Hide default action bar */
+.actions {
+    display: none !important;
+}
+
+/* Hide pagination and user info at bottom */
+.paginator {
+    display: none !important;
+}
+
+.paginator + * {
+    display: none !important;
+}
+
+/* Hide any remaining Django admin elements */
+.xfull {
+    display: none !important;
+}
+
+/* Ensure no filter sidebar appears */
+#changelist-filter,
+.module.filtered #changelist-filter,
+.filtered #changelist-filter {
+    display: none !important;
+    width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ============= CUSTOM MODERN FILTER UI ============= */
+.custom-filter-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    margin: 1.5rem 0;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+
+.filter-header {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-header:hover {
+    background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 100%);
+}
+
+.filter-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.filter-toggle-icon {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.filter-toggle-icon.expanded {
+    transform: rotate(180deg);
+}
+
+.filter-content {
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    background: #f8fafc;
+}
+
+.filter-content.expanded {
+    max-height: 500px;
+    padding: 2rem;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.filter-group {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.filter-group-title {
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.filter-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.filter-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.filter-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.filter-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-btn-primary {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+}
+
+.filter-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(99, 102, 241, 0.4);
+}
+
+.filter-btn-secondary {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+.filter-btn-secondary:hover {
+    background: #e2e8f0;
+    transform: translateY(-1px);
+}
+
+.active-filters {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.filter-tag {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-tag-remove {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: all 0.2s ease;
+}
+
+.filter-tag-remove:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* ============= ENHANCED USER OVERVIEW CARD STYLING ============= */
+.user-stats-container {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    padding: 0;
+    margin: 1.5rem 0;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    overflow: hidden;
+}
+
+.stats-header {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    color: white;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    transform: translate(30px, -30px);
+}
+
+.stats-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 150px;
+    height: 150px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+    transform: translate(-50px, 50px);
+}
+
+.stats-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.stats-icon {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+}
+
+.stats-title h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.5px;
+}
+
+.stats-subtitle {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.95rem;
+    font-weight: 500;
+    position: relative;
+    z-index: 2;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 0;
+    padding: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.25rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.stat-icon.total { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
+.stat-icon.admin { background: linear-gradient(135deg, #ef4444 0%, #f97316 100%); }
+.stat-icon.supervisor { background: linear-gradient(135deg, #f59e0b 0%, #eab308 100%); }
+.stat-icon.pg { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+
+.stat-content {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* ============= ENHANCED TABLE STYLES ============= */
+.results {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin: 1.5rem 0;
+}
+
+.results table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+/* CUSTOM TABLE HEADERS */
+.results thead tr {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+}
+
+.results th {
+    background: none !important;
+    color: white !important;
+    padding: 1.25rem 1rem !important;
+    text-align: left !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none !important;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.results th:first-child {
+    width: 60px;
+    text-align: center !important;
+}
+
+.results th a {
+    color: white !important;
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* TABLE DATA CELLS */
+.results td {
+    padding: 1rem !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    vertical-align: middle;
+    transition: all 0.3s ease;
+}
+
+.results tbody tr:hover {
+    background: linear-gradient(90deg, rgba(79, 70, 229, 0.05) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+    transform: scale(1.001);
+}
+
+.results tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+/* ============= ENHANCED CHECKBOXES ============= */
+.action-checkbox-column {
+    width: 60px !important;
+    text-align: center !important;
+    background: #f8fafc;
+}
+
+input[type="checkbox"][name="_selected_action"],
+#action-toggle {
+    width: 18px !important;
+    height: 18px !important;
+    border: 2px solid #4f46e5 !important;
+    border-radius: 4px !important;
+    background: white !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+input[type="checkbox"][name="_selected_action"]:checked,
+#action-toggle:checked {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+    border-color: #4f46e5 !important;
+}
+
+input[type="checkbox"][name="_selected_action"]:checked::after,
+#action-toggle:checked::after {
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* ============= ENHANCED ADD USER BUTTON ============= */
+.object-tools {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin: 1.5rem 0;
+}
+
+.object-tools li a {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    color: white !important;
+    padding: 1rem 2rem !important;
+    border-radius: 10px !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3) !important;
+    text-transform: none;
+}
+
+.object-tools li a::before {
+    content: "➕";
+    font-size: 1.2rem;
+}
+
+.object-tools li a:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 24px rgba(16, 185, 129, 0.4) !important;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+}
+
+/* ============= ACTION BAR ENHANCEMENT ============= */
+.actions {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
+    padding: 1.25rem !important;
+    border-radius: 10px !important;
+    border: 1px solid #cbd5e1 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    flex-wrap: wrap !important;
+    margin: 1rem 0 !important;
+}
+
+.actions label {
+    font-weight: 600 !important;
+    color: #374151 !important;
+    font-size: 0.9rem !important;
+}
+
+.actions select {
+    padding: 0.75rem 1rem !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px !important;
+    background: white !important;
+    color: #374151 !important;
+    font-weight: 500 !important;
+    min-width: 180px;
+}
+
+.actions button[type="submit"] {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3) !important;
+}
+
+.actions button[type="submit"]:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 16px rgba(79, 70, 229, 0.4) !important;
+}
+
+/* ============= COLUMN-SPECIFIC STYLES ============= */
+.field-username {
+    font-weight: 600 !important;
+    color: #1e293b !important;
+}
+
+.field-email {
+    color: #4f46e5 !important;
+}
+
+.field-get_role_display {
+    font-weight: 500 !important;
+}
+
+.field-specialty {
+    font-style: italic !important;
+    color: #64748b !important;
+}
+
+.field-year {
+    text-align: center !important;
+    font-weight: 500 !important;
+    color: #374151 !important;
+}
+
+.field-supervisor {
+    color: #059669 !important;
+    font-weight: 500 !important;
+}
+
+.field-date_joined {
+    color: #64748b !important;
+    font-size: 0.85rem !important;
+}
+
+/* ============= RESPONSIVE DESIGN ============= */
+@media (max-width: 768px) {
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .results table {
+        font-size: 0.8rem !important;
+    }
+
+    .results th, .results td {
+        padding: 0.75rem 0.5rem !important;
+    }
+
+    #content h1 {
+        font-size: 1.5rem !important;
+        padding: 1.5rem !important;
+    }
+
+    .filter-actions {
+        flex-direction: column;
+    }
+
+    .filter-btn {
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- User Statistics Container -->
+<div class="user-stats-container">
+    <div class="stats-header">
+        <div class="stats-title">
+            <span class="stats-icon">📊</span>
+            <h2>User Overview</h2>
+        </div>
+        <div class="stats-subtitle">Real-time user statistics and analytics</div>
+    </div>
+    <div class="stats-grid" id="userStatsGrid">
+        <!-- Stats will be populated by JavaScript -->
+    </div>
+</div>
+
+<!-- Custom Modern Filter UI -->
+<div class="custom-filter-container">
+    <div class="filter-header" onclick="toggleCustomFilters()">
+        <div class="filter-title">
+            <span>🔍</span>
+            <span>Advanced Search & Filters</span>
+        </div>
+        <div class="filter-toggle-icon" id="filterToggleIcon">▼</div>
+    </div>
+    <div class="filter-content" id="customFilterContent">
+        <div class="filter-grid">
+            <div class="filter-group">
+                <div class="filter-group-title">👤 Search Users</div>
+                <input type="text" class="filter-input" id="searchUsername" placeholder="Search by username..." />
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-group-title">✉️ Email Search</div>
+                <input type="text" class="filter-input" id="searchEmail" placeholder="Search by email..." />
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-group-title">🎭 Filter by Role</div>
+                <select class="filter-select" id="filterRole">
+                    <option value="">All Roles</option>
+                    <option value="admin">Administrator</option>
+                    <option value="supervisor">Supervisor</option>
+                    <option value="pg">Postgraduate</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-group-title">🩺 Filter by Specialty</div>
+                <select class="filter-select" id="filterSpecialty">
+                    <option value="">All Specialties</option>
+                    <option value="cardiology">Cardiology</option>
+                    <option value="neurology">Neurology</option>
+                    <option value="orthopedics">Orthopedics</option>
+                    <option value="pediatrics">Pediatrics</option>
+                    <option value="psychiatry">Psychiatry</option>
+                    <option value="surgery">Surgery</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-group-title">📅 Filter by Year</div>
+                <select class="filter-select" id="filterYear">
+                    <option value="">All Years</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-group-title">📝 Filter by Name</div>
+                <input type="text" class="filter-input" id="searchName" placeholder="Search by first/last name..." />
+            </div>
+        </div>
+
+        <div class="filter-actions">
+            <button class="filter-btn filter-btn-primary" onclick="applyCustomFilters()">
+                <span>🔍</span>
+                <span>Apply Filters</span>
+            </button>
+            <button class="filter-btn filter-btn-secondary" onclick="clearCustomFilters()">
+                <span>🗑️</span>
+                <span>Clear All</span>
+            </button>
+            <button class="filter-btn filter-btn-secondary" onclick="exportFilteredData()">
+                <span>📊</span>
+                <span>Export Results</span>
+            </button>
+        </div>
+
+        <div class="active-filters" id="activeFilters">
+            <!-- Active filter tags will appear here -->
+        </div>
+    </div>
+</div>
+
+<script>
+// Global variables for filtering
+let allUsers = [];
+let filteredUsers = [];
+let activeFilters = {};
+
+function toggleCustomFilters() {
+    const content = document.getElementById('customFilterContent');
+    const icon = document.getElementById('filterToggleIcon');
+
+    if (content.classList.contains('expanded')) {
+        content.classList.remove('expanded');
+        icon.classList.remove('expanded');
+    } else {
+        content.classList.add('expanded');
+        icon.classList.add('expanded');
+    }
+}
+
+function applyCustomFilters() {
+    const filters = {
+        username: document.getElementById('searchUsername').value.toLowerCase(),
+        email: document.getElementById('searchEmail').value.toLowerCase(),
+        role: document.getElementById('filterRole').value,
+        specialty: document.getElementById('filterSpecialty').value,
+        year: document.getElementById('filterYear').value,
+        name: document.getElementById('searchName').value.toLowerCase()
+    };
+
+    activeFilters = {};
+    const activeFiltersContainer = document.getElementById('activeFilters');
+    activeFiltersContainer.innerHTML = '';
+
+    // Store non-empty filters
+    Object.keys(filters).forEach(key => {
+        if (filters[key]) {
+            activeFilters[key] = filters[key];
+
+            // Create filter tag
+            const tag = document.createElement('div');
+            tag.className = 'filter-tag';
+            tag.innerHTML = `
+                <span>${getFilterLabel(key)}: ${filters[key]}</span>
+                <button class="filter-tag-remove" onclick="removeFilter('${key}')">×</button>
+            `;
+            activeFiltersContainer.appendChild(tag);
+        }
+    });
+
+    filterTable(filters);
+    updateStats();
+}
+
+function getFilterLabel(key) {
+    const labels = {
+        username: 'Username',
+        email: 'Email',
+        role: 'Role',
+        specialty: 'Specialty',
+        year: 'Year',
+        name: 'Name'
+    };
+    return labels[key] || key;
+}
+
+function removeFilter(filterKey) {
+    delete activeFilters[filterKey];
+    document.getElementById(`search${filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}`).value = '';
+    document.getElementById(`filter${filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}`).value = '';
+    applyCustomFilters();
+}
+
+function clearCustomFilters() {
+    document.getElementById('searchUsername').value = '';
+    document.getElementById('searchEmail').value = '';
+    document.getElementById('filterRole').value = '';
+    document.getElementById('filterSpecialty').value = '';
+    document.getElementById('filterYear').value = '';
+    document.getElementById('searchName').value = '';
+
+    activeFilters = {};
+    document.getElementById('activeFilters').innerHTML = '';
+
+    // Show all rows
+    const rows = document.querySelectorAll('.results tbody tr');
+    rows.forEach(row => {
+        row.style.display = '';
+    });
+
+    updateStats();
+}
+
+function filterTable(filters) {
+    const rows = document.querySelectorAll('.results tbody tr');
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+        if (row.querySelector('td[colspan]')) {
+            row.style.display = 'none';
+            return;
+        }
+
+        let showRow = true;
+
+        // Username filter
+        if (filters.username) {
+            const usernameCell = row.querySelector('.field-username');
+            if (!usernameCell || !usernameCell.textContent.toLowerCase().includes(filters.username)) {
+                showRow = false;
+            }
+        }
+
+        // Email filter
+        if (filters.email) {
+            const emailCell = row.querySelector('.field-email');
+            if (!emailCell || !emailCell.textContent.toLowerCase().includes(filters.email)) {
+                showRow = false;
+            }
+        }
+
+        // Role filter
+        if (filters.role) {
+            const roleCell = row.querySelector('.field-get_role_display');
+            if (!roleCell || !roleCell.textContent.toLowerCase().includes(filters.role)) {
+                showRow = false;
+            }
+        }
+
+        // Specialty filter
+        if (filters.specialty) {
+            const specialtyCell = row.querySelector('.field-specialty');
+            if (!specialtyCell || !specialtyCell.textContent.toLowerCase().includes(filters.specialty)) {
+                showRow = false;
+            }
+        }
+
+        // Year filter
+        if (filters.year) {
+            const yearCell = row.querySelector('.field-year');
+            if (!yearCell || !yearCell.textContent.includes(filters.year)) {
+                showRow = false;
+            }
+        }
+
+        // Name filter
+        if (filters.name) {
+            const nameCell = row.querySelector('.field-get_full_name');
+            if (!nameCell || !nameCell.textContent.toLowerCase().includes(filters.name)) {
+                showRow = false;
+            }
+        }
+
+        row.style.display = showRow ? '' : 'none';
+        if (showRow) visibleCount++;
+    });
+
+    // Update result count display
+    updateResultCount(visibleCount);
+}
+
+function updateResultCount(count) {
+    const total = document.querySelectorAll('.results tbody tr:not([style*="display: none"])').length;
+    console.log(`Showing ${count} users (filtered from total)`);
+}
+
+function exportFilteredData() {
+    // Simple export functionality - could be enhanced
+    alert('Export functionality would be implemented here to export filtered user data as CSV/Excel.');
+}
+
+function updateStats() {
+    setTimeout(() => {
+        const visibleRows = document.querySelectorAll('.results tbody tr:not([style*="display: none"])');
+        let stats = {
+            total: 0,
+            admin: 0,
+            supervisor: 0,
+            pg: 0
+        };
+
+        visibleRows.forEach(row => {
+            if (!row.querySelector('td[colspan]') && row.querySelectorAll('td').length > 1) {
+                stats.total++;
+
+                const roleCell = row.querySelector('.field-get_role_display');
+                if (roleCell) {
+                    const roleText = roleCell.textContent.toLowerCase().trim();
+                    if (roleText.includes('admin')) {
+                        stats.admin++;
+                    } else if (roleText.includes('supervisor')) {
+                        stats.supervisor++;
+                    } else if (roleText.includes('postgraduate') || roleText.includes('pg')) {
+                        stats.pg++;
+                    }
+                }
+            }
+        });
+
+        const statsGrid = document.getElementById('userStatsGrid');
+        statsGrid.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-icon total">${stats.total}</div>
+                <div class="stat-content">
+                    <div class="stat-number">Total Users</div>
+                    <div class="stat-label">Currently displayed</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon admin">${stats.admin}</div>
+                <div class="stat-content">
+                    <div class="stat-number">Administrators</div>
+                    <div class="stat-label">System admin access</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon supervisor">${stats.supervisor}</div>
+                <div class="stat-content">
+                    <div class="stat-number">Supervisors</div>
+                    <div class="stat-label">Training supervisors</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pg">${stats.pg}</div>
+                <div class="stat-content">
+                    <div class="stat-number">Postgraduates</div>
+                    <div class="stat-label">Training doctors</div>
+                </div>
+            </div>
+        `;
+    }, 100);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize stats
+    updateStats();
+
+    // Enhanced checkbox functionality
+    const selectAllCheckbox = document.getElementById('action-toggle');
+    const actionCheckboxes = document.querySelectorAll('input[name="_selected_action"]');
+
+    if (selectAllCheckbox && actionCheckboxes.length > 0) {
+        selectAllCheckbox.addEventListener('change', function() {
+            actionCheckboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+
+        actionCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const checkedBoxes = document.querySelectorAll('input[name="_selected_action"]:checked');
+                selectAllCheckbox.checked = checkedBoxes.length === actionCheckboxes.length;
+                selectAllCheckbox.indeterminate = checkedBoxes.length > 0 && checkedBoxes.length < actionCheckboxes.length;
+            });
+        });
+    }
+
+    // Add proper table headers with icons
+    setTimeout(() => {
+        const table = document.querySelector('.results table');
+        if (table) {
+            const headers = table.querySelectorAll('th');
+            headers.forEach(header => {
+                if (header.classList.contains('field-username')) {
+                    header.innerHTML = header.innerHTML.replace('Username', '👤 Username');
+                } else if (header.classList.contains('field-get_full_name')) {
+                    header.innerHTML = header.innerHTML.replace('Full Name', '📝 Full Name');
+                } else if (header.classList.contains('field-email')) {
+                    header.innerHTML = header.innerHTML.replace('Email', '✉️ Email');
+                } else if (header.classList.contains('field-get_role_display')) {
+                    header.innerHTML = header.innerHTML.replace('Role', '🎭 Role');
+                } else if (header.classList.contains('field-specialty')) {
+                    header.innerHTML = header.innerHTML.replace('Specialty', '🩺 Specialty');
+                } else if (header.classList.contains('field-year')) {
+                    header.innerHTML = header.innerHTML.replace('Year', '📅 Year');
+                } else if (header.classList.contains('field-supervisor')) {
+                    header.innerHTML = header.innerHTML.replace('Supervisor', '👨‍💼 Supervisor');
+                } else if (header.classList.contains('field-date_joined')) {
+                    header.innerHTML = header.innerHTML.replace('Date joined', '📆 Date Joined');
+                }
+            });
+        }
+    }, 100);
+
+    // Add real-time search functionality
+    ['searchUsername', 'searchEmail', 'searchName'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.addEventListener('input', function() {
+                if (this.value.length > 2 || this.value.length === 0) {
+                    applyCustomFilters();
+                }
+            });
+        }
+    });
+
+    // Add real-time filter functionality for dropdowns
+    ['filterRole', 'filterSpecialty', 'filterYear'].forEach(id => {
+        const select = document.getElementById(id);
+        if (select) {
+            select.addEventListener('change', applyCustomFilters);
+        }
+    });
+});
+</script>
+
+{{ block.super }}
+{% endblock %}

@@ -2,9 +2,14 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.utils.translation import gettext_lazy as _
+from django.template.response import TemplateResponse
+from django.utils import timezone
+from django.db.models import Count
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
-from .models import User
+from .models import User, SupervisorProfile, ResidentProfile
 
 class UserResource(resources.ModelResource):
     """Resource for bulk import/export of users via CSV/Excel"""
@@ -42,18 +47,22 @@ class CustomUserChangeForm(UserChangeForm):
         fields = '__all__'
 
 @admin.register(User)
-class UserAdmin(BaseUserAdmin, ImportExportModelAdmin):
-    """Enhanced user admin with bulk import/export and role-based management"""
+class UserAdmin(BaseUserAdmin):
+    """Enhanced user admin with role-based management and custom UI"""
     
-    resource_class = UserResource
+    # Note: ImportExportModelAdmin temporarily removed to showcase UI improvements
+    # resource_class = UserResource
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
+    change_list_template = 'admin/sims_users/user/change_list.html'
     
-    list_display = ('username', 'email', 'first_name', 'last_name', 'role', 
-                   'specialty', 'year', 'supervisor', 'is_active', 'date_joined')
-    list_filter = ('role', 'specialty', 'year', 'is_active', 'is_staff', 'date_joined')
+    list_display = ('username', 'get_full_name', 'email', 'get_role_display',
+                   'specialty', 'year', 'supervisor', 'get_status_display', 'date_joined')
+    # list_filter = ('role', 'specialty', 'year', 'is_active', 'is_staff', 'date_joined')  # Removed to eliminate default filters
     search_fields = ('username', 'first_name', 'last_name', 'email')
     ordering = ('username',)
+    list_per_page = 25
+    list_max_show_all = 100
     
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
@@ -83,6 +92,16 @@ class UserAdmin(BaseUserAdmin, ImportExportModelAdmin):
         }),
     )
     
+    def changelist_view(self, request, extra_context=None):
+        """Override changelist view to add enhanced context for our custom UI"""
+        extra_context = extra_context or {}
+
+        # Add any additional context needed for our custom template
+        extra_context['custom_css'] = ""
+        extra_context['custom_js'] = ""
+
+        return super().changelist_view(request, extra_context)
+
     def get_queryset(self, request):
         """Filter queryset based on user role"""
         qs = super().get_queryset(request)
@@ -138,12 +157,104 @@ class UserAdmin(BaseUserAdmin, ImportExportModelAdmin):
         """Control who can delete users"""
         return request.user.is_superuser or request.user.role == 'admin'
     
+    def get_full_name(self, obj):
+        """Display full name with fallback"""
+        full_name = f"{obj.first_name} {obj.last_name}".strip()
+        return full_name or obj.username
+    get_full_name.short_description = "Full Name"
+    get_full_name.admin_order_field = 'first_name'
+
+    def get_role_display(self, obj):
+        """Enhanced role display with color coding"""
+        if obj.role == 'admin':
+            return f"🔴 {obj.get_role_display()}"
+        elif obj.role == 'supervisor':
+            return f"🟠 {obj.get_role_display()}"
+        elif obj.role == 'pg':
+            return f"🟢 {obj.get_role_display()}"
+        return obj.get_role_display()
+    get_role_display.short_description = "Role"
+    get_role_display.admin_order_field = 'role'
+
+    def get_status_display(self, obj):
+        """Enhanced status display"""
+        if obj.is_active:
+            return "✅ Active"
+        else:
+            return "❌ Inactive"
+    get_status_display.short_description = "Status"
+    get_status_display.admin_order_field = 'is_active'
+    get_status_display.boolean = True
+
     def save_model(self, request, obj, form, change):
         """Custom save logic"""
         if not change:  # New user
             obj.created_by = request.user
         obj.modified_by = request.user
         super().save_model(request, obj, form, change)
+
+@admin.register(SupervisorProfile)
+class SupervisorProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'supervisor_type', 'department', 'cv_verified', 'specialty_certificate_verified', 'updated_at')
+    list_filter = ('supervisor_type', 'department', 'cv_verified', 'specialty_certificate_verified')
+    search_fields = ('user__username', 'user__first_name', 'user__last_name', 'department__name')
+    readonly_fields = ('user', 'created_at', 'updated_at') # User should not be changed once profile is created
+    fieldsets = (
+        (None, {'fields': ('user',)}),
+        ('Details', {'fields': ('supervisor_type', 'department')}),
+        ('Documents', {'fields': ('cv_file', 'cv_verified', 'specialty_certificate_file', 'specialty_certificate_verified', 'publications_list_file')}),
+        ('Timestamps', {'fields': ('created_at', 'updated_at')}),
+    )
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('user', 'department')
+
+@admin.register(ResidentProfile)
+class ResidentProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'training_type', 'program_duration', 'get_supervisor_name', 'department', 'updated_at')
+    list_filter = ('training_type', 'program_duration', 'department', 'supervisor__user__last_name')
+    search_fields = ('user__username', 'user__first_name', 'user__last_name', 'department__name', 'supervisor__user__username')
+    readonly_fields = ('user', 'created_at', 'updated_at')
+    fieldsets = (
+        (None, {'fields': ('user',)}),
+        ('Training Details', {'fields': ('training_type', 'program_duration', 'supervisor', 'department')}),
+        ('Initial Credentials', {
+            'classes': ('collapse',),
+            'fields': (
+                ('mbbs_certificate', 'mbbs_certificate_verified'),
+                ('fsc_certificate', 'fsc_certificate_verified'),
+                ('matric_certificate', 'matric_certificate_verified'),
+                ('pmdc_registration', 'pmdc_registration_verified'),
+                ('house_job_certificate', 'house_job_certificate_verified'),
+                ('experience_certificate', 'experience_certificate_verified'),
+                ('program_letter', 'program_letter_verified'),
+            )
+        }),
+        ('Ongoing Documents', {
+            'classes': ('collapse',),
+            'fields': (
+                ('workshop_details_file', 'workshop_details_verified'),
+                ('imm_result_file', 'imm_result_verified'),
+                ('final_exam_result_file', 'final_exam_result_verified'),
+                ('thesis_file', 'thesis_verified'),
+                ('wpba_records_file', 'wpba_records_verified'),
+            )
+        }),
+        ('Timestamps', {'fields': ('created_at', 'updated_at')}),
+    )
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('user', 'supervisor__user', 'department')
+
+    def get_supervisor_name(self, obj):
+        if obj.supervisor:
+            return obj.supervisor.user.get_full_name()
+        return None
+    get_supervisor_name.short_description = 'Supervisor'
+    get_supervisor_name.admin_order_field = 'supervisor__user__last_name'
+
 
 # Customize admin site headers
 admin.site.site_header = "SIMS - Postgraduate Medical Training System"

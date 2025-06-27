@@ -76,11 +76,13 @@ TEMPLATES = [
             BASE_DIR / 'templates',  # Global templates
         ],
         'APP_DIRS': True,
-        'OPTIONS': {            'context_processors': [
+        'OPTIONS': {
+            'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'sims.context_processors.admin_stats_context',
             ],
         },
     },
@@ -162,7 +164,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Login/Logout URLs
 LOGIN_URL = '/users/login/'
 LOGIN_REDIRECT_URL = '/users/dashboard/'
-LOGOUT_REDIRECT_URL = '/users/logout/'
+LOGOUT_REDIRECT_URL = '/users/login/'
 
 # Session settings
 SESSION_COOKIE_AGE = 28800  # 8 hours

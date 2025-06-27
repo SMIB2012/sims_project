@@ -1,0 +1,460 @@
+/* Custom CSS for Enhanced User List Admin Page */
+
+/* Container improvements */
+.change-list {
+    margin: 0.5rem;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+/* Header improvements */
+#content h1 {
+    font-size: 1.8rem;
+    color: #417690;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#content h1:before {
+    content: "👥";
+    font-size: 1.5rem;
+}
+
+/* Table improvements */
+.change-list .results {
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: 1rem 0;
+}
+
+.change-list .results table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.875rem;
+    background: white;
+}
+
+/* Sticky headers */
+.change-list .results thead th {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(135deg, #417690 0%, #2c5aa0 100%);
+    color: white;
+    padding: 0.75rem 0.5rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.change-list .results thead th a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.change-list .results thead th a:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Table body improvements */
+.change-list .results tbody td {
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.change-list .results tbody tr:hover {
+    background: linear-gradient(90deg, rgba(65, 118, 144, 0.05) 0%, rgba(255, 255, 255, 0.05) 100%);
+}
+
+/* Column-specific styling */
+.change-list .results .field-username {
+    font-weight: 600;
+    color: #2c3e50;
+    max-width: 120px;
+}
+
+.change-list .results .field-get_full_name {
+    color: #495057;
+    font-weight: 500;
+    max-width: 150px;
+}
+
+.change-list .results .field-email {
+    color: #417690;
+    max-width: 180px;
+    font-size: 0.85rem;
+}
+
+.change-list .results .field-get_role_display {
+    max-width: 100px;
+    font-weight: 500;
+}
+
+.change-list .results .field-specialty {
+    max-width: 120px;
+    font-style: italic;
+    color: #6c757d;
+}
+
+.change-list .results .field-year {
+    text-align: center;
+    max-width: 60px;
+    font-weight: 500;
+    color: #495057;
+}
+
+.change-list .results .field-supervisor {
+    max-width: 120px;
+    color: #28a745;
+    font-size: 0.85rem;
+}
+
+.change-list .results .field-get_status_display {
+    text-align: center;
+    max-width: 80px;
+    font-weight: 500;
+}
+
+.change-list .results .field-date_joined {
+    max-width: 100px;
+    color: #6c757d;
+    font-size: 0.8rem;
+}
+
+/* Action column */
+.change-list .results .action-select {
+    width: 40px;
+    text-align: center;
+}
+
+.change-list .results .action-checkbox {
+    transform: scale(1.2);
+    accent-color: #417690;
+}
+
+/* Search form improvements */
+.change-list .search-form {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid #e9ecef;
+}
+
+.change-list .search-form input[type="text"] {
+    padding: 0.5rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    width: 300px;
+    max-width: 100%;
+}
+
+.change-list .search-form input[type="text"]:focus {
+    border-color: #417690;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(65, 118, 144, 0.1);
+}
+
+.change-list .search-form input[type="submit"] {
+    background: #417690;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-left: 0.5rem;
+}
+
+.change-list .search-form input[type="submit"]:hover {
+    background: #2c5aa0;
+}
+
+/* Filter improvements */
+#changelist-filter {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 1rem;
+}
+
+#changelist-filter h3 {
+    color: #417690;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+#changelist-filter ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#changelist-filter li {
+    margin-bottom: 0.25rem;
+}
+
+#changelist-filter a {
+    display: block;
+    padding: 0.3rem 0.5rem;
+    color: #495057;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+#changelist-filter a:hover,
+#changelist-filter .selected a {
+    background: #417690;
+    color: white;
+}
+
+/* Pagination improvements */
+.paginator {
+    padding: 1rem;
+    text-align: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.paginator .page-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.paginator a,
+.paginator .this-page {
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    min-width: 35px;
+    text-align: center;
+    font-size: 0.875rem;
+}
+
+.paginator a {
+    background: white;
+    color: #417690;
+    border: 2px solid #417690;
+}
+
+.paginator a:hover {
+    background: #417690;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.paginator .this-page {
+    background: #417690;
+    color: white;
+    border: 2px solid #417690;
+}
+
+/* Actions bar */
+.actions {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.actions select {
+    padding: 0.5rem;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    background: white;
+}
+
+.actions button {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.actions button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+/* Add button improvements */
+.object-tools {
+    margin-bottom: 1rem;
+}
+
+.object-tools li a {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.object-tools li a:before {
+    content: "➕";
+}
+
+.object-tools li a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(40, 167, 69, 0.4);
+}
+
+/* Results info */
+.results-info {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+/* User statistics dashboard */
+.user-stats {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f1f8e9 100%);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-size: 0.875rem;
+    border: 1px solid #e9ecef;
+}
+
+.user-stats .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #495057;
+    font-weight: 500;
+}
+
+.user-stats .stat-number {
+    background: white;
+    color: #417690;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-width: 30px;
+    text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .change-list .results .field-date_joined {
+        display: none;
+    }
+}
+
+@media (max-width: 992px) {
+    .change-list .results .field-specialty {
+        display: none;
+    }
+
+    .user-stats {
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .change-list .results .field-get_full_name {
+        display: none;
+    }
+
+    .change-list .results table {
+        font-size: 0.8rem;
+    }
+
+    .user-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .change-list .search-form input[type="text"] {
+        width: 200px;
+    }
+}
+
+/* Loading and transitions */
+.change-list .results {
+    transition: all 0.3s ease;
+}
+
+.change-list .results tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+/* Focus styles for accessibility */
+.change-list .results tbody tr:focus-within {
+    outline: 2px solid #417690;
+    outline-offset: -2px;
+}
+
+/* Tooltip styles */
+[title] {
+    cursor: help;
+}
+
+/* Status and role specific styling */
+.change-list .results .field-get_status_display[title*="Active"] {
+    color: #28a745;
+}
+
+.change-list .results .field-get_status_display[title*="Inactive"] {
+    color: #dc3545;
+}
+
+.change-list .results .field-get_role_display[title*="Admin"] {
+    color: #dc3545;
+}
+
+.change-list .results .field-get_role_display[title*="Supervisor"] {
+    color: #fd7e14;
+}
+
+.change-list .results .field-get_role_display[title*="PG"] {
+    color: #28a745;
+}
